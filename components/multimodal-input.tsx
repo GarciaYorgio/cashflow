@@ -133,31 +133,20 @@ function PureMultimodalInput({
   const submitForm = useCallback(() => {
     window.history.replaceState({}, '', `/chat/${chatId}`);
 
-    // Non-image files are not supported as file parts by the model.
-    // Convert non-image attachments into text references so the request succeeds.
-    const attachmentParts: any[] = [];
-    for (const attachment of attachments) {
-      if (attachment.contentType?.startsWith('image')) {
-        attachmentParts.push({
+    sendMessage({
+      role: 'user',
+      parts: [
+        ...attachments.map((attachment) => ({
           type: 'file' as const,
           url: attachment.url,
           name: attachment.name,
-          mediaType: attachment.contentType as any,
-        } as any);
-      } else {
-        attachmentParts.push({
-          type: 'text' as const,
-          text: `Archivo adjunto: ${attachment.name} (${attachment.contentType || 'desconocido'})\n${attachment.url}`,
-        } as any);
-      }
-    }
-
-    sendMessage({
-      role: 'user',
-      parts: ([
-        ...attachmentParts,
-        { type: 'text' as const, text: input } as any,
-      ] as unknown) as any,
+          mediaType: attachment.contentType,
+        })),
+        {
+          type: 'text',
+          text: input,
+        },
+      ],
     });
 
     setAttachments([]);
