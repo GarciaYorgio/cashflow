@@ -39,7 +39,7 @@ import * as SelectPrimitive from '@radix-ui/react-select';
 import equal from 'fast-deep-equal';
 import type { UseChatHelpers } from '@ai-sdk/react';
 import { AnimatePresence, motion } from 'framer-motion';
-import { ArrowDown } from 'lucide-react';
+import { ArrowDown, SendIcon } from 'lucide-react';
 import { useScrollToBottom } from '@/hooks/use-scroll-to-bottom';
 import type { VisibilityType } from './visibility-selector';
 import type { Attachment, ChatMessage } from '@/lib/types';
@@ -191,7 +191,7 @@ function PureMultimodalInput({
       const { error } = await response.json();
       toast.error(error);
     } catch (error) {
-      toast.error('Failed to upload file, please try again!');
+      toast.error('Error al subir el archivo, por favor intente nuevamente!');
     }
   };
 
@@ -242,7 +242,7 @@ function PureMultimodalInput({
           ...successfullyUploadedAttachments,
         ]);
       } catch (error) {
-        console.error('Error uploading files!', error);
+        console.error('Error al subir los archivos!', error);
       } finally {
         setUploadQueue([]);
       }
@@ -309,7 +309,7 @@ function PureMultimodalInput({
         onSubmit={(event) => {
           event.preventDefault();
           if (status !== 'ready') {
-            toast.error('Please wait for the model to finish its response!');
+            toast.error('Por favor, espere a que el modelo termine su respuesta!');
           } else {
             submitForm();
           }
@@ -352,7 +352,7 @@ function PureMultimodalInput({
           <PromptInputTextarea
             data-testid="multimodal-input"
             ref={textareaRef}
-            placeholder="Send a message..."
+            placeholder="Envía un mensaje..."
             value={input}
             onChange={handleInput}
             minHeight={44}
@@ -380,9 +380,9 @@ function PureMultimodalInput({
             <PromptInputSubmit
               status={status}
               disabled={!input.trim() || uploadQueue.length > 0}
-              className="-mt-2 size-7 rounded-full bg-primary p-1 text-primary-foreground transition-colors duration-200 hover:bg-primary/90 disabled:bg-muted disabled:text-muted-foreground"
+              className='-mt-2 size-10 cursor-pointer rounded-xl bg-primary p-1 text-primary-foreground transition-colors duration-200 hover:bg-primary/90 disabled:bg-muted disabled:text-muted-foreground'
             >
-              <ArrowUpIcon size={14} />
+              <ArrowUpIcon className="size-5" />
             </PromptInputSubmit>
           )}
         </PromptInputToolbar>
@@ -419,7 +419,7 @@ function PureAttachmentsButton({
   return (
     <Button
       data-testid="attachments-button"
-      className="h-8 rounded-lg p-1 transition-colors hover:bg-accent"
+      className='h-8 w-8 cursor-pointer rounded-xl p-2 transition-colors hover:bg-none'
       onClick={(event) => {
         event.preventDefault();
         fileInputRef.current?.click();
@@ -427,7 +427,7 @@ function PureAttachmentsButton({
       disabled={status !== 'ready' || isReasoningModel}
       variant="ghost"
     >
-      <PaperclipIcon size={14} style={{ width: 14, height: 14 }} />
+      <PaperclipIcon size={16} style={{ width: 16, height: 16 }} />
     </Button>
   );
 }
@@ -500,14 +500,14 @@ function PureStopButton({
   return (
     <Button
       data-testid="stop-button"
-      className="size-7 rounded-full bg-foreground p-1 text-background transition-colors duration-200 hover:bg-foreground/90 disabled:bg-muted disabled:text-muted-foreground"
+      className="size-10 rounded-xl bg-foreground p-1 text-background transition-colors duration-200 hover:bg-foreground/90 disabled:bg-muted disabled:text-muted-foreground"
       onClick={(event) => {
         event.preventDefault();
         stop();
         setMessages((messages) => messages);
       }}
     >
-      <StopIcon size={14} />
+      <StopIcon className="size-5" />
     </Button>
   );
 }

@@ -45,7 +45,7 @@ function Toast(props: ToastProps) {
         data-testid="toast"
         key={id}
         className={cn(
-          'flex toast-mobile:w-fit w-full flex-row gap-3 rounded-lg bg-zinc-100 p-3',
+          'flex toast-mobile:w-fit w-full flex-row gap-3 rounded-lg bg-background p-3',
           multiLine ? 'items-start' : 'items-center',
         )}
       >

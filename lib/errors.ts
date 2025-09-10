@@ -64,7 +64,7 @@ export class ChatSDKError extends Error {
       });
 
       return Response.json(
-        { code: '', message: 'Something went wrong. Please try again later.' },
+        { code: '', message: 'Algo salió mal. Por favor, intenta nuevamente más tarde.' },
         { status: statusCode },
       );
     }
@@ -75,40 +75,40 @@ export class ChatSDKError extends Error {
 
 export function getMessageByErrorCode(errorCode: ErrorCode): string {
   if (errorCode.includes('database')) {
-    return 'An error occurred while executing a database query.';
+    return 'Ocurrió un error al ejecutar una consulta a la base de datos.';
   }
 
   switch (errorCode) {
     case 'bad_request:api':
-      return "The request couldn't be processed. Please check your input and try again.";
+      return "La solicitud no pudo ser procesada. Por favor, verifica tu mensaje y vuelve a intentarlo.";
 
     case 'unauthorized:auth':
-      return 'You need to sign in before continuing.';
+      return 'Necesitas iniciar sesión antes de continuar.';
     case 'forbidden:auth':
-      return 'Your account does not have access to this feature.';
+      return 'Tu cuenta no tiene acceso a esta función.';
 
     case 'rate_limit:chat':
-      return 'You have exceeded your maximum number of messages for the day. Please try again later.';
+      return 'Has superado el límite de mensajes por día. Por favor, intenta nuevamente más tarde.';
     case 'not_found:chat':
-      return 'The requested chat was not found. Please check the chat ID and try again.';
+      return 'El chat solicitado no fue encontrado. Por favor, verifica el ID del chat y vuelve a intentarlo.';
     case 'forbidden:chat':
-      return 'This chat belongs to another user. Please check the chat ID and try again.';
+      return 'Este chat pertenece a otro usuario. Por favor, verifica el ID del chat y vuelve a intentarlo.';
     case 'unauthorized:chat':
-      return 'You need to sign in to view this chat. Please sign in and try again.';
+      return 'Necesitas iniciar sesión para ver este chat. Por favor, inicia sesión y vuelve a intentarlo.';
     case 'offline:chat':
-      return "We're having trouble sending your message. Please check your internet connection and try again.";
+      return "Estamos teniendo problemas para enviar tu mensaje. Por favor, verifica tu conexión a internet y vuelve a intentarlo.";
 
     case 'not_found:document':
-      return 'The requested document was not found. Please check the document ID and try again.';
+      return 'El documento solicitado no fue encontrado. Por favor, verifica el ID del documento y vuelve a intentarlo.';
     case 'forbidden:document':
-      return 'This document belongs to another user. Please check the document ID and try again.';
+      return 'Este documento pertenece a otro usuario. Por favor, verifica el ID del documento y vuelve a intentarlo.';
     case 'unauthorized:document':
-      return 'You need to sign in to view this document. Please sign in and try again.';
+      return 'Necesitas iniciar sesión para ver este documento. Por favor, inicia sesión y vuelve a intentarlo.';
     case 'bad_request:document':
-      return 'The request to create or update the document was invalid. Please check your input and try again.';
+      return 'La solicitud para crear o actualizar el documento no fue válida. Por favor, verifica tu mensaje y vuelve a intentarlo.';
 
     default:
-      return 'Something went wrong. Please try again later.';
+      return 'Algo salió mal. Por favor, intenta nuevamente más tarde.';
   }
 }
 

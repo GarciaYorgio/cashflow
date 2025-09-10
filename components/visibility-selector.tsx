@@ -27,14 +27,14 @@ const visibilities: Array<{
 }> = [
   {
     id: 'private',
-    label: 'Private',
-    description: 'Only you can access this chat',
+    label: 'Privado',
+    description: 'Solo tú puedes acceder a este chat',
     icon: <LockIcon />,
   },
   {
     id: 'public',
-    label: 'Public',
-    description: 'Anyone with the link can access this chat',
+    label: 'Público',
+    description: 'Cualquiera con el enlace puede acceder a este chat',
     icon: <GlobeIcon />,
   },
 ];
@@ -64,14 +64,14 @@ export function VisibilitySelector({
       <DropdownMenuTrigger
         asChild
         className={cn(
-          'w-fit data-[state=open]:bg-accent data-[state=open]:text-accent-foreground',
+          'w-fit data-[state=open]:cursor-pointer data-[state=open]:bg-accent data-[state=open]:text-accent-foreground',
           className,
         )}
       >
         <Button
           data-testid="visibility-selector"
           variant="outline"
-          className="hidden focus:outline-hidden focus:ring-0 md:flex md:h-fit md:px-2"
+          className="hidden cursor-pointer focus:outline-hidden focus:ring-0 md:flex md:h-fit md:px-2"
         >
           {selectedVisibility?.icon}
           {selectedVisibility?.label}
@@ -88,7 +88,7 @@ export function VisibilitySelector({
               setVisibilityType(visibility.id);
               setOpen(false);
             }}
-            className="group/item flex flex-row items-center justify-between gap-4"
+            className="group/item flex cursor-pointer flex-row items-center justify-between gap-4"
             data-active={visibility.id === visibilityType}
           >
             <div className="flex flex-col items-start gap-1">

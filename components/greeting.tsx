@@ -4,8 +4,7 @@ export const Greeting = () => {
   return (
     <div
       key="overview"
-      // biome-ignore lint/nursery/useSortedClasses: <explanation>
-      className="mx-auto mt-4 flex w-full justify-center h-full flex-col justify-center px-4 md:mt-16 md:px-8"
+     className="mx-auto flex min-h-[80vh] w-full flex-col items-center justify-center px-4 md:px-8"
     >
       <motion.div
         initial={{ opacity: 0, y: 10 }}
@@ -14,7 +13,7 @@ export const Greeting = () => {
         transition={{ delay: 0.5 }}
         className='text-center font-semibold text-xl md:text-2xl'
       >
-        Hello there!
+        Hola @username!
       </motion.div>
       <motion.div
         initial={{ opacity: 0, y: 10 }}
@@ -23,7 +22,7 @@ export const Greeting = () => {
         transition={{ delay: 0.6 }}
         className="text-center text-xl text-zinc-500 md:text-2xl"
       >
-        How can I help you today?
+        ¿Cómo puedo ayudarte?
       </motion.div>
     </div>
   );

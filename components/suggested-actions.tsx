@@ -5,7 +5,7 @@ import { memo } from 'react';
 import type { UseChatHelpers } from '@ai-sdk/react';
 import type { VisibilityType } from './visibility-selector';
 import type { ChatMessage } from '@/lib/types';
-import { Suggestion } from './elements/suggestion';
+import { Suggestions, Suggestion } from './elements/suggestion';
 
 interface SuggestedActionsProps {
   chatId: string;
@@ -23,10 +23,6 @@ function PureSuggestedActions({
     'Causar facturas de venta y compras con IVA (Colombia)',
     'Generar reporte de impuestos: IVA, ReteFuente y ReteICA',
     'Clasificar cuentas según el PUC y normas NIIF',
-    'Preparar nómina: devengados, deducciones y provisiones',
-    'Crear notas contables de ajuste y comprobantes de diario',
-    'Analizar flujo de caja y proyección de pagos',
-    'Generar estados financieros (Balance y P&G) a una fecha',
   ];
 
   return (
@@ -41,6 +37,7 @@ function PureSuggestedActions({
           exit={{ opacity: 0, y: 20 }}
           transition={{ delay: 0.05 * index }}
           key={suggestedAction}
+          className="flex-none"
         >
           <Suggestion
             suggestion={suggestedAction}
@@ -51,7 +48,7 @@ function PureSuggestedActions({
                 parts: [{ type: 'text', text: suggestion }],
               });
             }}
-            className="h-auto w-full whitespace-normal p-3 text-left"
+            className="h-10 w-full whitespace-normal p-3 text-left"
           >
             {suggestedAction}
           </Suggestion>

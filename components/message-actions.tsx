@@ -36,12 +36,12 @@ export function PureMessageActions({
 
   const handleCopy = async () => {
     if (!textFromParts) {
-      toast.error("There's no text to copy!");
+      toast.error("No hay texto para copiar!");
       return;
     }
 
     await copyToClipboard(textFromParts);
-    toast.success('Copied to clipboard!');
+    toast.success('Copiado al portapapeles!');
   };
 
   // User messages get edit (on hover) and copy actions
@@ -58,7 +58,7 @@ export function PureMessageActions({
               <PencilEditIcon />
             </Action>
           )}
-          <Action tooltip="Copy" onClick={handleCopy}>
+          <Action tooltip="Copiar" onClick={handleCopy}>
             <CopyIcon />
           </Action>
         </div>
@@ -68,12 +68,12 @@ export function PureMessageActions({
 
   return (
     <Actions className="-ml-0.5">
-      <Action tooltip="Copy" onClick={handleCopy}>
+      <Action tooltip="Copiar" onClick={handleCopy}>
         <CopyIcon />
       </Action>
 
       <Action
-        tooltip="Upvote Response"
+        tooltip="Buena respuesta"
         data-testid="message-upvote"
         disabled={vote?.isUpvoted}
         onClick={async () => {
@@ -87,7 +87,7 @@ export function PureMessageActions({
           });
 
           toast.promise(upvote, {
-            loading: 'Upvoting Response...',
+            loading: 'Calificando como buena respuesta...',
             success: () => {
               mutate<Array<Vote>>(
                 `/api/vote?chatId=${chatId}`,
@@ -110,9 +110,9 @@ export function PureMessageActions({
                 { revalidate: false },
               );
 
-              return 'Upvoted Response!';
+              return 'Buena respuesta!';
             },
-            error: 'Failed to upvote response.',
+            error: 'Error al calificar como buena respuesta.',
           });
         }}
       >
@@ -120,7 +120,7 @@ export function PureMessageActions({
       </Action>
 
       <Action
-        tooltip="Downvote Response"
+        tooltip="Respuesta deficiente"
         data-testid="message-downvote"
         disabled={vote && !vote.isUpvoted}
         onClick={async () => {
@@ -134,7 +134,7 @@ export function PureMessageActions({
           });
 
           toast.promise(downvote, {
-            loading: 'Downvoting Response...',
+            loading: 'Calificando como respuesta deficiente...',
             success: () => {
               mutate<Array<Vote>>(
                 `/api/vote?chatId=${chatId}`,
@@ -157,9 +157,9 @@ export function PureMessageActions({
                 { revalidate: false },
               );
 
-              return 'Downvoted Response!';
+              return 'Respuesta deficiente!';
             },
-            error: 'Failed to downvote response.',
+            error: 'Error al calificar como respuesta deficiente.',
           });
         }}
       >

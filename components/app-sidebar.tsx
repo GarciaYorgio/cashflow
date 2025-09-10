@@ -23,7 +23,7 @@ export function AppSidebar({ user }: { user: User | undefined }) {
   const { setOpenMobile } = useSidebar();
 
   return (
-    <Sidebar className="group-data-[side=left]:border-r-0">
+    <Sidebar className="group-data-[side=left]:border-r-1">
       <SidebarHeader>
         <SidebarMenu>
           <div className="flex flex-row items-center justify-between">
@@ -34,8 +34,8 @@ export function AppSidebar({ user }: { user: User | undefined }) {
               }}
               className="flex flex-row items-center gap-3"
             >
-              <span className="cursor-pointer rounded-md px-2 font-semibold text-lg hover:bg-muted">
-                Chatbot
+              <span className="cursor-pointer rounded-md px-2 font-bold text-current text-xl">
+                Cashflow
               </span>
             </Link>
             <Tooltip>
@@ -43,7 +43,7 @@ export function AppSidebar({ user }: { user: User | undefined }) {
                 <Button
                   variant="ghost"
                   type="button"
-                  className="h-8 p-1 md:h-fit md:p-2"
+                  className='h-8 cursor-pointer p-1 md:h-fit md:p-2'
                   onClick={() => {
                     setOpenMobile(false);
                     router.push('/');
@@ -54,7 +54,7 @@ export function AppSidebar({ user }: { user: User | undefined }) {
                 </Button>
               </TooltipTrigger>
               <TooltipContent align="end" className="hidden md:block">
-                New Chat
+                Nuevo Chat
               </TooltipContent>
             </Tooltip>
           </div>
