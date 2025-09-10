@@ -5,6 +5,7 @@ import { type Dispatch, memo, type SetStateAction, useState } from 'react';
 import type { ArtifactActionContext } from './create-artifact';
 import { cn } from '@/lib/utils';
 import { toast } from 'sonner';
+import { ArtifactCloseButton } from './artifact-close-button';
 
 interface ArtifactActionsProps {
   artifact: UIArtifact;
@@ -46,7 +47,7 @@ function PureArtifactActions({
   };
 
   return (
-    <div className="flex flex-row gap-1">
+    <div className='pointer-events-auto flex h-full flex-row items-center gap-1'>
       {artifactDefinition.actions.map((action) => (
         <Tooltip key={action.description}>
           <TooltipTrigger asChild>
@@ -82,6 +83,7 @@ function PureArtifactActions({
           <TooltipContent>{action.description}</TooltipContent>
         </Tooltip>
       ))}
+      <ArtifactCloseButton />
     </div>
   );
 }

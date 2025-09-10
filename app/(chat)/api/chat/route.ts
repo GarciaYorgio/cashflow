@@ -123,8 +123,58 @@ export async function POST(request: Request) {
       }
     }
 
+    // Ingest simple text-based files server-side so the model can read them.
+    const transformedParts = await Promise.all(
+      message.parts.map(async (part) => {
+        if (part.type !== 'file') return part;
+
+        const mediaType = part.mediaType;
+
+        const isTextLike =
+          mediaType.startsWith('text/') ||
+          mediaType === 'text/csv' ||
+          mediaType === 'application/json' ||
+          mediaType ===
+            'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet';
+
+        try {
+          if (isTextLike) {
+            const res = await fetch(part.url);
+            if (res.ok) {
+              const raw = await res.text();
+              const maxLen = 20000; // ~20KB to keep prompt size reasonable
+              const snippet =
+                raw.length > maxLen
+                  ? raw.slice(0, maxLen) + '\n...[truncado]'
+                  : raw;
+              return {
+                type: 'text' as const,
+                text: `Contenido del archivo: ${part.name} (${mediaType})\n\n${snippet}`,
+              };
+            }
+          }
+        } catch (_) {
+          // fallthrough to reference-only
+        }
+
+        // Unsupported or failed fetch: include a reference so user/model sees the link
+        return {
+          type: 'text' as const,
+          text: `Archivo adjunto: ${part.name} (${mediaType}). URL: ${part.url}`,
+        };
+      }),
+    );
+
+    const incomingMessage: ChatMessage = {
+      ...message,
+      parts: transformedParts,
+    } as any;
+
     const messagesFromDb = await getMessagesByChatId({ id });
-    const uiMessages = [...convertToUIMessages(messagesFromDb), message];
+    const uiMessages = [
+      ...convertToUIMessages(messagesFromDb),
+      incomingMessage,
+    ];
 
     const { longitude, latitude, city, country } = geolocation(request);
 
@@ -139,9 +189,9 @@ export async function POST(request: Request) {
       messages: [
         {
           chatId: id,
-          id: message.id,
+          id: incomingMessage.id,
           role: 'user',
-          parts: message.parts,
+          parts: incomingMessage.parts,
           attachments: [],
           createdAt: new Date(),
         },

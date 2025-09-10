@@ -1,4 +1,5 @@
 import { formatDistance } from 'date-fns';
+import { es } from 'date-fns/locale';
 import { AnimatePresence, motion } from 'framer-motion';
 import {
   type Dispatch,
@@ -113,6 +114,8 @@ function PureArtifact({
         setCurrentVersionIndex(documents.length - 1);
         setArtifact((currentArtifact) => ({
           ...currentArtifact,
+          // Keep the latest saved title in state so it persists on reload
+          title: mostRecentDocument.title ?? currentArtifact.title,
           content: mostRecentDocument.content ?? '',
         }));
       }
@@ -156,6 +159,7 @@ function PureArtifact({
 
             const newDocument = {
               ...currentDocument,
+              title: artifact.title,
               content: updatedContent,
               createdAt: new Date(),
             };
@@ -220,6 +224,44 @@ function PureArtifact({
   };
 
   const [isToolbarVisible, setIsToolbarVisible] = useState(false);
+  const [isRenaming, setIsRenaming] = useState(false);
+  const [newTitle, setNewTitle] = useState(artifact.title);
+
+  const handleRename = useCallback(async () => {
+    if (newTitle.trim() === '') return;
+    if (newTitle === artifact.title) {
+      setIsRenaming(false);
+      return;
+    }
+
+    try {
+      await fetch(`/api/document?id=${artifact.documentId}`, {
+        method: 'POST',
+        body: JSON.stringify({
+          title: newTitle,
+          content: artifact.content,
+          kind: artifact.kind,
+        }),
+      });
+
+      setArtifact((prev) => ({
+        ...prev,
+        title: newTitle,
+      }));
+      setIsRenaming(false);
+      mutateDocuments();
+    } catch (error) {
+      console.error('Failed to rename artifact:', error);
+    }
+  }, [
+    artifact.content,
+    artifact.documentId,
+    artifact.kind,
+    artifact.title,
+    mutateDocuments,
+    newTitle,
+    setArtifact,
+  ]);
 
   /*
    * NOTE: if there are no documents, or if
@@ -231,6 +273,19 @@ function PureArtifact({
     documents && documents.length > 0
       ? currentVersionIndex === documents.length - 1
       : true;
+
+  // Keep artifact title in sync with the selected version so undo/redo and reload show the correct name
+  useEffect(() => {
+    if (!documents || documents.length === 0) return;
+    const versionDoc = isCurrentVersion
+      ? documents.at(-1)
+      : documents[currentVersionIndex];
+    if (!versionDoc) return;
+    setArtifact((currentArtifact) => ({
+      ...currentArtifact,
+      title: versionDoc.title ?? currentArtifact.title,
+    }));
+  }, [documents, currentVersionIndex, isCurrentVersion, setArtifact]);
 
   const { width: windowWidth, height: windowHeight } = useWindowSize();
   const isMobile = windowWidth ? windowWidth < 768 : false;
@@ -414,22 +469,51 @@ function PureArtifact({
           >
             <div className="flex flex-row items-start justify-between p-2">
               <div className="flex flex-row items-start gap-4">
-                <ArtifactCloseButton />
-
                 <div className="flex flex-col">
-                  <div className="font-medium">{artifact.title}</div>
+                  {isRenaming ? (
+                    <input
+                      type="text"
+                      autoFocus
+                      value={newTitle}
+                      onChange={(e) => setNewTitle(e.target.value)}
+                      onBlur={handleRename}
+                      onKeyDown={(e) => {
+                        if (e.key === 'Enter') {
+                          e.preventDefault();
+                          handleRename();
+                        }
+                        if (e.key === 'Escape') {
+                          setIsRenaming(false);
+                          setNewTitle(artifact.title);
+                        }
+                      }}
+                      className="h-7 w-full border-0 bg-transparent p-0 font-medium text-lg outline-none focus:ring-0"
+                    />
+                  ) : (
+                    // biome-ignore lint/nursery/noStaticElementInteractions: <explanation>
+                    <div
+                      className="cursor-text font-medium text-lg"
+                      onClick={() => {
+                        setIsRenaming(true);
+                        setNewTitle(artifact.title);
+                      }}
+                    >
+                      {artifact.title}
+                    </div>
+                  )}
 
                   {isContentDirty ? (
                     <div className="text-muted-foreground text-sm">
-                      Saving changes...
+                      Guardando cambios...
                     </div>
                   ) : document ? (
                     <div className="text-muted-foreground text-sm">
-                      {`Updated ${formatDistance(
+                      {`Actualizado ${formatDistance(
                         new Date(document.createdAt),
                         new Date(),
                         {
                           addSuffix: true,
+                          locale: es,
                         },
                       )}`}
                     </div>
@@ -471,7 +555,7 @@ function PureArtifact({
                 setMetadata={setMetadata}
               />
 
-              <AnimatePresence>
+              {/* <AnimatePresence>
                 {isCurrentVersion && (
                   <Toolbar
                     isToolbarVisible={isToolbarVisible}
@@ -483,7 +567,7 @@ function PureArtifact({
                     artifactKind={artifact.kind}
                   />
                 )}
-              </AnimatePresence>
+              </AnimatePresence> */}
             </div>
 
             <AnimatePresence>

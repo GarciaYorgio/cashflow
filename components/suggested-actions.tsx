@@ -19,10 +19,14 @@ function PureSuggestedActions({
   selectedVisibilityType,
 }: SuggestedActionsProps) {
   const suggestedActions = [
-    'What are the advantages of using Next.js?',
-    "Write code to demonstrate Dijkstra's algorithm",
-    'Help me write an essay about Silicon Valley',
-    'What is the weather in San Francisco?',
+    'Conciliar extractos bancarios con el libro auxiliar',
+    'Causar facturas de venta y compras con IVA (Colombia)',
+    'Generar reporte de impuestos: IVA, ReteFuente y ReteICA',
+    'Clasificar cuentas según el PUC y normas NIIF',
+    'Preparar nómina: devengados, deducciones y provisiones',
+    'Crear notas contables de ajuste y comprobantes de diario',
+    'Analizar flujo de caja y proyección de pagos',
+    'Generar estados financieros (Balance y P&G) a una fecha',
   ];
 
   return (

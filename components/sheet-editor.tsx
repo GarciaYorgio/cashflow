@@ -53,7 +53,7 @@ const PureSpreadsheetEditor = ({
       frozen: true,
       width: 50,
       renderCell: ({ rowIdx }: { rowIdx: number }) => rowIdx + 1,
-      cellClass: 'border-t border-r dark:bg-zinc-950 dark:text-zinc-50',
+      cellClass: 'border-t border-r dark:bg-zinc-950 dark:text-zinc-50 text-center',
       headerCellClass: 'border-t border-r dark:bg-zinc-900 dark:text-zinc-50',
     };
 
@@ -65,7 +65,7 @@ const PureSpreadsheetEditor = ({
       cellClass: cn(`border-t dark:bg-zinc-950 dark:text-zinc-50`, {
         'border-l': i !== 0,
       }),
-      headerCellClass: cn(`border-t dark:bg-zinc-900 dark:text-zinc-50`, {
+      headerCellClass: cn(`border-t dark:bg-zinc-900 dark:text-zinc-50 text-center`, {
         'border-l': i !== 0,
       }),
     }));

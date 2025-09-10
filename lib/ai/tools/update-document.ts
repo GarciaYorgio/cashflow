@@ -56,7 +56,7 @@ export const updateDocument = ({ session, dataStream }: UpdateDocumentProps) =>
         id,
         title: document.title,
         kind: document.kind,
-        content: 'The document has been updated successfully.',
+        content: 'El documento ha sido actualizado correctamente.',
       };
     },
   });

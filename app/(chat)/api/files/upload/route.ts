@@ -5,16 +5,14 @@ import { z } from 'zod';
 import { auth } from '@/app/(auth)/auth';
 
 // Use Blob instead of File since File is not available in Node.js environment
+// Accept any MIME type; enforce only configurable size limit
+const MAX_UPLOAD_MB = Number(process.env.NEXT_MAX_UPLOAD_MB || 25);
+const MAX_UPLOAD_BYTES = MAX_UPLOAD_MB * 1024 * 1024;
+
 const FileSchema = z.object({
-  file: z
-    .instanceof(Blob)
-    .refine((file) => file.size <= 5 * 1024 * 1024, {
-      message: 'File size should be less than 5MB',
-    })
-    // Update the file type based on the kind of files you want to accept
-    .refine((file) => ['image/jpeg', 'image/png'].includes(file.type), {
-      message: 'File type should be JPEG or PNG',
-    }),
+  file: z.instanceof(Blob).refine((file) => file.size <= MAX_UPLOAD_BYTES, {
+    message: `File size should be less than ${MAX_UPLOAD_MB}MB`,
+  }),
 });
 
 export async function POST(request: Request) {
@@ -30,11 +28,13 @@ export async function POST(request: Request) {
 
   try {
     const formData = await request.formData();
-    const file = formData.get('file') as Blob;
+    const fileEntry = formData.get('file');
 
-    if (!file) {
+    if (!fileEntry || !(fileEntry instanceof Blob)) {
       return NextResponse.json({ error: 'No file uploaded' }, { status: 400 });
     }
+
+    const file = fileEntry as Blob;
 
     const validatedFile = FileSchema.safeParse({ file });
 
@@ -46,16 +46,20 @@ export async function POST(request: Request) {
       return NextResponse.json({ error: errorMessage }, { status: 400 });
     }
 
-    // Get filename from formData since Blob doesn't have name property
-    const filename = (formData.get('file') as File).name;
+    // Get filename from formData when available, otherwise generate one
+    const filename = (fileEntry as File).name || `upload-${Date.now()}`;
     const fileBuffer = await file.arrayBuffer();
 
     try {
       const data = await put(`${filename}`, fileBuffer, {
         access: 'public',
+        contentType: file.type || undefined,
       });
 
-      return NextResponse.json(data);
+      return NextResponse.json({
+        ...data,
+        contentType: file.type || 'application/octet-stream',
+      });
     } catch (error) {
       return NextResponse.json({ error: 'Upload failed' }, { status: 500 });
     }
