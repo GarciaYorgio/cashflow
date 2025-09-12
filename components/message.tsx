@@ -62,12 +62,7 @@ const PurePreviewMessage = ({
       animate={{ opacity: 1 }}
       data-role={message.role}
     >
-      <div
-        className={cn('flex w-full items-start gap-2 md:gap-3', {
-          'justify-end': message.role === 'user' && mode !== 'edit',
-          'justify-start': message.role === 'assistant',
-        })}
-      >
+      <div className="flex w-full items-start gap-2 md:gap-3">
         {message.role === 'assistant' && (
           <div className="-mt-1 flex size-8 shrink-0 items-center justify-center rounded-full bg-background ring-1 ring-border">
             <SparklesIcon size={14} />
@@ -75,19 +70,13 @@ const PurePreviewMessage = ({
         )}
 
         <div
-          className={cn('flex flex-col', {
+          className={cn('flex w-full flex-col', {
             'gap-2 md:gap-4': message.parts?.some(
               (p) => p.type === 'text' && p.text?.trim(),
             ),
             'min-h-96': message.role === 'assistant' && requiresScrollPadding,
-            'w-full':
-              (message.role === 'assistant' &&
-                message.parts?.some(
-                  (p) => p.type === 'text' && p.text?.trim(),
-                )) ||
-              mode === 'edit',
-            'max-w-[calc(100%-2.5rem)] sm:max-w-[min(fit-content,80%)]':
-              message.role === 'user' && mode !== 'edit',
+            'items-end': message.role === 'user' && mode !== 'edit',
+            'items-start': message.role === 'assistant',
           })}
         >
           {attachmentsFromMessage.length > 0 && (
@@ -99,7 +88,7 @@ const PurePreviewMessage = ({
                 <PreviewAttachment
                   key={attachment.url}
                   attachment={{
-                    name: attachment.filename ?? 'file',
+                    name: attachment.filename ?? 'archivo',
                     contentType: attachment.mediaType,
                     url: attachment.url,
                   }}
@@ -129,14 +118,14 @@ const PurePreviewMessage = ({
                     <MessageContent
                       data-testid="message-content"
                       className={cn({
-                        'w-fit break-words rounded-2xl px-3 py-2 text-right text-white':
+                        'w-fit break-words rounded-xl px-3 py-2 text-right text-white':
                           message.role === 'user',
                         'bg-transparent px-0 py-0 text-left':
                           message.role === 'assistant',
                       })}
                       style={
                         message.role === 'user'
-                          ? { backgroundColor: '#006cff' }
+                          ? { backgroundColor: '#000000' }
                           : undefined
                       }
                     >
@@ -317,7 +306,7 @@ export const ThinkingMessage = () => {
         </div>
 
         <div className="flex w-full flex-col gap-2 md:gap-4">
-          <div className='p-0 text-muted-foreground text-sm'>
+          <div className="p-0 text-muted-foreground text-sm">
             <LoadingText>Pensando...</LoadingText>
           </div>
         </div>

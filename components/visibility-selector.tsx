@@ -14,6 +14,7 @@ import {
   ChevronDownIcon,
   GlobeIcon,
   LockIcon,
+  CopyIcon,
 } from './icons';
 import { useChatVisibility } from '@/hooks/use-chat-visibility';
 
@@ -71,7 +72,7 @@ export function VisibilitySelector({
         <Button
           data-testid="visibility-selector"
           variant="outline"
-          className="hidden cursor-pointer focus:outline-hidden focus:ring-0 md:flex md:h-fit md:px-2"
+          className="my-2 hidden w-full cursor-pointer focus:outline-hidden focus:ring-0 md:flex md:h-fit md:px-2"
         >
           {selectedVisibility?.icon}
           {selectedVisibility?.label}
@@ -105,6 +106,27 @@ export function VisibilitySelector({
           </DropdownMenuItem>
         ))}
       </DropdownMenuContent>
+      {visibilityType === 'public' && (
+        <div className="mt-3 space-y-2 border-border/50 border-t pt-3">
+          <div className="text-muted-foreground text-xs">Link</div>
+          <div className="flex items-center gap-2 rounded-xl bg-accent px-3 py-2">
+            <div className="truncate text-sm">
+              {`${typeof window !== 'undefined' ? window.location.origin : ''}/chat/${chatId}`}
+            </div>
+            <button
+              type="button"
+              className="ml-auto cursor-pointer rounded-md p-1 hover:bg-muted/70"
+              onClick={() => {
+                const url = `${window.location.origin}/chat/${chatId}`;
+                void navigator.clipboard.writeText(url);
+              }}
+              aria-label="Copy link"
+            >
+              <CopyIcon />
+            </button>
+          </div>
+        </div>
+      )}
     </DropdownMenu>
   );
 }

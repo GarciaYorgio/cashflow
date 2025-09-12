@@ -32,7 +32,7 @@ function PureArtifactCloseButton() {
     <Button
       data-testid="artifact-close-button"
       variant="outline"
-      className="h-fit p-2 dark:hover:bg-zinc-700"
+      className='h-fit cursor-pointer p-2 dark:hover:bg-zinc-700'
       onClick={handleClose}
     >
       <CrossIcon size={18} />

@@ -3,6 +3,8 @@ import { Loader } from './elements/loader';
 import { CrossSmallIcon } from './icons';
 import { Button } from './ui/button';
 import Image from 'next/image';
+import { useArtifact } from '@/hooks/use-artifact';
+import { useCallback } from 'react';
 
 export const PreviewAttachment = ({
   attachment,
@@ -17,19 +19,53 @@ export const PreviewAttachment = ({
 }) => {
   const { name, url, contentType } = attachment;
 
+  const { setArtifact } = useArtifact();
+
+  const handlePreviewClick = useCallback(() => {
+    const rect = document
+      .querySelector(`[data-url="${url}"]`)
+      ?.getBoundingClientRect() || {
+      top: 0,
+      left: 0,
+      width: 0,
+      height: 0,
+    };
+
+    setArtifact({
+      documentId: url,
+      title: name || 'Preview',
+      content: url,
+      kind: 'document-viewer',
+      isVisible: true,
+      status: 'idle',
+      boundingBox: {
+        top: rect.top,
+        left: rect.left,
+        width: rect.width,
+        height: rect.height,
+      },
+    });
+  }, [contentType, name, setArtifact, url]);
+
   return (
-    <div data-testid="input-attachment-preview" className='group relative size-16 overflow-hidden rounded-lg border bg-muted'>
+    <button
+      type="button"
+      data-testid="input-attachment-preview"
+      data-url={url}
+      className="group relative size-64 cursor-pointer overflow-hidden rounded-lg border bg-muted focus:outline-none"
+      onClick={handlePreviewClick}
+    >
       {contentType?.startsWith('image') ? (
         <Image
           src={url}
           alt={name ?? 'An image attachment'}
           className="size-full object-cover"
-          width={64}
-          height={64}
+          width={512}
+          height={512}
         />
       ) : (
-        <div className='flex size-full items-center justify-center text-muted-foreground text-xs'>
-          File
+        <div className="flex size-full items-center justify-center text-muted-foreground text-xs">
+          {name}
         </div>
       )}
 
@@ -49,10 +85,6 @@ export const PreviewAttachment = ({
           <CrossSmallIcon size={8} />
         </Button>
       )}
-
-      <div className='absolute inset-x-0 bottom-0 truncate bg-linear-to-t from-black/80 to-transparent px-1 py-0.5 text-[10px] text-white'>
-        {name}
-      </div>
-    </div>
+    </button>
   );
 };

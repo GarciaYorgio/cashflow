@@ -17,6 +17,7 @@ import {
 } from '@/components/ui/sidebar';
 import Link from 'next/link';
 import { Tooltip, TooltipContent, TooltipTrigger } from './ui/tooltip';
+import { SidebarToggle } from './sidebar-toggle';
 
 export function AppSidebar({ user }: { user: User | undefined }) {
   const router = useRouter();
@@ -38,7 +39,8 @@ export function AppSidebar({ user }: { user: User | undefined }) {
                 Cashflow
               </span>
             </Link>
-            <Tooltip>
+            <SidebarToggle />
+            {/* <Tooltip>
               <TooltipTrigger asChild>
                 <Button
                   variant="ghost"
@@ -56,7 +58,7 @@ export function AppSidebar({ user }: { user: User | undefined }) {
               <TooltipContent align="end" className="hidden md:block">
                 Nuevo Chat
               </TooltipContent>
-            </Tooltip>
+            </Tooltip> */}
           </div>
         </SidebarMenu>
       </SidebarHeader>

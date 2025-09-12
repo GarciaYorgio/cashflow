@@ -51,14 +51,18 @@ export function PureMessageActions({
         <div className="relative">
           {setMode && (
             <Action
-              tooltip="Edit"
+              tooltip="Editar"
               onClick={() => setMode('edit')}
-              className="-left-10 absolute top-0 opacity-0 transition-opacity group-hover/message:opacity-100"
+              className="-left-10 absolute top-0 cursor-pointer"
             >
               <PencilEditIcon />
             </Action>
           )}
-          <Action tooltip="Copiar" onClick={handleCopy}>
+          <Action 
+            tooltip="Copiar" 
+            onClick={handleCopy}
+            className="cursor-pointer"
+          >
             <CopyIcon />
           </Action>
         </div>

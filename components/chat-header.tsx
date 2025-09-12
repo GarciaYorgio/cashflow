@@ -1,16 +1,15 @@
 'use client';
 
-import Link from 'next/link';
-import { useRouter } from 'next/navigation';
-import { useWindowSize } from 'usehooks-ts';
-
-import { SidebarToggle } from '@/components/sidebar-toggle';
-import { Button } from '@/components/ui/button';
-import { PlusIcon, VercelIcon } from './icons';
-import { useSidebar } from './ui/sidebar';
 import { memo } from 'react';
+import { SidebarToggle } from '@/components/sidebar-toggle';
+import { useSidebar } from './ui/sidebar';
+import useSWR from 'swr';
+import { fetcher } from '@/lib/utils';
+import type { Chat } from '@/lib/db/schema';
 import { type VisibilityType, VisibilitySelector } from './visibility-selector';
 import type { Session } from 'next-auth';
+import { ModeToggle } from './ui/theme-toggle';
+import { Popover, PopoverContent, PopoverTrigger } from './ui/popover';
 
 function PureChatHeader({
   chatId,
@@ -23,14 +22,25 @@ function PureChatHeader({
   isReadonly: boolean;
   session: Session;
 }) {
-  const router = useRouter();
   const { open } = useSidebar();
 
-  const { width: windowWidth } = useWindowSize();
+  const { data: chatHistory } = useSWR<{ chats: Chat[] }>(
+    chatId ? `/api/history?limit=1&ending_before=${chatId}` : null,
+    fetcher,
+  );
+
+  const chatTitle = chatHistory?.chats[0]?.title;
 
   return (
-    <header className='items-right sticky top-0 flex justify-end gap-2 bg-background px-2 py-1.5 md:px-2'>
-      {/* <SidebarToggle /> */}
+    <header className="sticky top-0 flex w-full items-center justify-between gap-2 bg-background px-2 py-1.5 md:px-2">
+      <div className="flex items-center gap-2">
+        {!open && <SidebarToggle />}
+      </div>
+      <div className="flex-1 overflow-hidden px-2">
+        {/* <div className="truncate text-right font-medium text-foreground">
+          {chatTitle}
+        </div> */}
+      </div>
 
       {/* {(!open || windowWidth < 768) && (
         <Button
@@ -45,15 +55,23 @@ function PureChatHeader({
           <span className="md:sr-only">New Chat</span>
         </Button>
       )} */}
+      <ModeToggle />
 
       {!isReadonly && (
-        <VisibilitySelector
-          chatId={chatId}
-          selectedVisibilityType={selectedVisibilityType}
-          className="order-1 md:order-2"
-        />
+        <Popover>
+          <PopoverTrigger className="cursor-pointer rounded-lg bg-accent p-2">
+            Compartir
+          </PopoverTrigger>
+          <PopoverContent className="w-[376px]">
+            <span className="pb-8 font-semibold text-md">Compartir chat</span>
+            <VisibilitySelector
+              chatId={chatId}
+              selectedVisibilityType={selectedVisibilityType}
+              className="order-1 md:order-2"
+            />
+          </PopoverContent>
+        </Popover>
       )}
-
     </header>
   );
 }

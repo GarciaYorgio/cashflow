@@ -65,17 +65,17 @@ export function MessageEditor({
       <div className="flex flex-row justify-end gap-2">
         <Button
           variant="outline"
-          className="h-fit px-3 py-2"
+          className='h-fit cursor-pointer px-3 py-2'
           onClick={() => {
             setMode('view');
           }}
         >
-          Cancel
+          Cancelar
         </Button>
         <Button
           data-testid="message-editor-send-button"
           variant="default"
-          className="h-fit px-3 py-2"
+          className='h-fit cursor-pointer px-3 py-2'
           disabled={isSubmitting}
           onClick={async () => {
             setIsSubmitting(true);

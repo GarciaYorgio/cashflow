@@ -5,6 +5,7 @@ import { ThemeProvider } from '@/components/theme-provider';
 
 import './globals.css';
 import { SessionProvider } from 'next-auth/react';
+import { TailwindScreen } from '@/components/ui/tailwind-screen';
 
 export const metadata: Metadata = {
   metadataBase: new URL('https://cashflow.ai'),
@@ -79,6 +80,7 @@ export default async function RootLayout({
         >
           <Toaster position="top-center" />
           <SessionProvider>{children}</SessionProvider>
+          {process.env.NODE_ENV === "development" && <TailwindScreen />}
         </ThemeProvider>
       </body>
     </html>
