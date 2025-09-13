@@ -82,7 +82,7 @@ const PurePreviewMessage = ({
           {attachmentsFromMessage.length > 0 && (
             <div
               data-testid={`message-attachments`}
-              className="flex flex-row justify-end gap-2"
+              className="flex flex-row flex-wrap items-end justify-end gap-2"
             >
               {attachmentsFromMessage.map((attachment) => (
                 <PreviewAttachment
@@ -92,6 +92,7 @@ const PurePreviewMessage = ({
                     contentType: attachment.mediaType,
                     url: attachment.url,
                   }}
+                  enableArtifact
                 />
               ))}
             </div>

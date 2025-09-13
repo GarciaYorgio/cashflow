@@ -94,7 +94,9 @@ function PureArtifact({
     isLoading: isDocumentsFetching,
     mutate: mutateDocuments,
   } = useSWR<Array<Document>>(
-    artifact.documentId !== 'init' && artifact.status !== 'streaming'
+    artifact.documentId !== 'init' &&
+      artifact.status !== 'streaming' &&
+      artifact.kind !== 'document-viewer'
       ? `/api/document?id=${artifact.documentId}`
       : null,
     fetcher,
@@ -315,7 +317,7 @@ function PureArtifact({
       {artifact.isVisible && (
         <motion.div
           data-testid="artifact"
-          className="fixed top-0 left-0 z-50 flex h-dvh w-dvw flex-row bg-transparent"
+          className="fixed top-0 left-0 z-50 flex h-dvh w-dvw flex-row bg-background"
           initial={{ opacity: 1 }}
           animate={{ opacity: 1 }}
           exit={{ opacity: 0, transition: { delay: 0.4 } }}
@@ -360,7 +362,7 @@ function PureArtifact({
               <AnimatePresence>
                 {!isCurrentVersion && (
                   <motion.div
-                    className="absolute top-0 left-0 z-50 h-dvh w-[400px] bg-zinc-900/50"
+                    className="absolute top-0 left-0 z-50 h-dvh w-[400px] bg-neutral-900"
                     initial={{ opacity: 0 }}
                     animate={{ opacity: 1 }}
                     exit={{ opacity: 0 }}
@@ -391,7 +393,7 @@ function PureArtifact({
                     setAttachments={setAttachments}
                     messages={messages}
                     sendMessage={sendMessage}
-                    className="bg-background dark:bg-muted"
+                    className="bg-background dark:bg-background"
                     setMessages={setMessages}
                     selectedVisibilityType={selectedVisibilityType}
                     selectedModelId={selectedModelId}
@@ -402,7 +404,7 @@ function PureArtifact({
           )}
 
           <motion.div
-            className="fixed flex h-dvh flex-col overflow-y-scroll border-zinc-200 bg-background md:border-l dark:border-zinc-700 dark:bg-muted"
+            className="fixed flex h-dvh flex-col overflow-y-scroll border-zinc-200 bg-background md:border-l dark:border-neutral-700 dark:bg-background"
             initial={
               isMobile
                 ? {
@@ -488,7 +490,7 @@ function PureArtifact({
                           setNewTitle(artifact.title);
                         }
                       }}
-                      className="h-7 w-full border-0 bg-transparent p-0 font-medium text-lg outline-none focus:ring-0"
+                      className="h-7 w-full border-0 bg-background p-0 font-medium text-lg outline-none focus:ring-0"
                     />
                   ) : (
                     // biome-ignore lint/nursery/noStaticElementInteractions: <explanation>
@@ -503,24 +505,25 @@ function PureArtifact({
                     </div>
                   )}
 
-                  {isContentDirty ? (
-                    <div className="text-muted-foreground text-sm">
-                      Guardando cambios...
-                    </div>
-                  ) : document ? (
-                    <div className="text-muted-foreground text-sm">
-                      {`Actualizado ${formatDistance(
-                        new Date(document.createdAt),
-                        new Date(),
-                        {
-                          addSuffix: true,
-                          locale: es,
-                        },
-                      )}`}
-                    </div>
-                  ) : (
-                    <div className="mt-2 h-3 w-32 animate-pulse rounded-md bg-muted-foreground/20" />
-                  )}
+                  {artifact.kind !== 'document-viewer' &&
+                    (isContentDirty ? (
+                      <div className="text-muted-foreground text-sm">
+                        Guardando cambios...
+                      </div>
+                    ) : document ? (
+                      <div className="text-muted-foreground text-sm">
+                        {`Actualizado ${formatDistance(
+                          new Date(document.createdAt),
+                          new Date(),
+                          {
+                            addSuffix: true,
+                            locale: es,
+                          },
+                        )}`}
+                      </div>
+                    ) : (
+                      <div className="mt-2 h-3 w-32 animate-pulse rounded-md bg-background" />
+                    ))}
                 </div>
               </div>
 
@@ -535,7 +538,7 @@ function PureArtifact({
               />
             </div>
 
-            <div className="h-full max-w-full! items-center overflow-y-scroll bg-background dark:bg-muted">
+            <div className="h-full max-w-full! items-center overflow-y-scroll bg-background dark:bg-background">
               <artifactDefinition.content
                 title={artifact.title}
                 content={

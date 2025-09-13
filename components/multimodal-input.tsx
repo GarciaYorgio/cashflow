@@ -309,7 +309,9 @@ function PureMultimodalInput({
         onSubmit={(event) => {
           event.preventDefault();
           if (status !== 'ready') {
-            toast.error('Por favor, espere a que el modelo termine su respuesta!');
+            toast.error(
+              'Por favor, espere a que el modelo termine su respuesta!',
+            );
           } else {
             submitForm();
           }
@@ -318,7 +320,7 @@ function PureMultimodalInput({
         {(attachments.length > 0 || uploadQueue.length > 0) && (
           <div
             data-testid="attachments-preview"
-            className="flex flex-row items-end gap-2 overflow-x-scroll px-3 py-2"
+            className="flex flex-row flex-wrap items-end gap-2 px-3 py-2"
           >
             {attachments.map((attachment) => (
               <PreviewAttachment
@@ -380,7 +382,7 @@ function PureMultimodalInput({
             <PromptInputSubmit
               status={status}
               disabled={!input.trim() || uploadQueue.length > 0}
-              className='-mt-2 size-10 cursor-pointer rounded-xl bg-primary p-1 text-primary-foreground transition-colors duration-200 hover:bg-primary/90 disabled:bg-muted disabled:text-muted-foreground'
+              className="-mt-2 size-10 cursor-pointer rounded-xl bg-primary p-1 text-primary-foreground transition-colors duration-200 hover:bg-primary/90 disabled:bg-muted disabled:text-muted-foreground"
             >
               <ArrowUpIcon className="size-5" />
             </PromptInputSubmit>
@@ -419,7 +421,7 @@ function PureAttachmentsButton({
   return (
     <Button
       data-testid="attachments-button"
-      className='h-8 w-8 cursor-pointer rounded-xl p-2 transition-colors hover:bg-none'
+      className="h-8 w-8 cursor-pointer rounded-xl p-2 transition-colors hover:bg-none"
       onClick={(event) => {
         event.preventDefault();
         fileInputRef.current?.click();

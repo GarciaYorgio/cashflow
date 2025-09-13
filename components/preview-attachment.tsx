@@ -5,17 +5,20 @@ import { Button } from './ui/button';
 import Image from 'next/image';
 import { useArtifact } from '@/hooks/use-artifact';
 import { useCallback } from 'react';
+import { cn } from '@/lib/utils';
 
 export const PreviewAttachment = ({
   attachment,
   isUploading = false,
   onRemove,
   onEdit,
+  enableArtifact = false,
 }: {
   attachment: Attachment;
   isUploading?: boolean;
   onRemove?: () => void;
   onEdit?: () => void;
+  enableArtifact?: boolean;
 }) => {
   const { name, url, contentType } = attachment;
 
@@ -48,12 +51,24 @@ export const PreviewAttachment = ({
   }, [contentType, name, setArtifact, url]);
 
   return (
-    <button
-      type="button"
+    <div
+      role="button"
+      tabIndex={0}
       data-testid="input-attachment-preview"
       data-url={url}
-      className="group relative size-64 cursor-pointer overflow-hidden rounded-lg border bg-muted focus:outline-none"
-      onClick={handlePreviewClick}
+      className={cn(
+        'group relative cursor-pointer overflow-hidden rounded-lg border bg-muted focus:outline-none',
+        enableArtifact ? 'size-64' : 'size-24',
+      )}
+      onClick={enableArtifact ? handlePreviewClick : () => {}}
+      onKeyDown={(e) => {
+        if (e.key === 'Enter' || e.key === ' ') {
+          e.preventDefault();
+          if (enableArtifact) {
+            handlePreviewClick();
+          }
+        }
+      }}
     >
       {contentType?.startsWith('image') ? (
         <Image
@@ -80,11 +95,11 @@ export const PreviewAttachment = ({
           onClick={onRemove}
           size="sm"
           variant="destructive"
-          className="absolute top-0.5 right-0.5 size-4 rounded-full p-0 opacity-0 transition-opacity group-hover:opacity-100"
+          className="absolute top-0.5 right-0.5 size-4 cursor-pointer rounded-full p-0 opacity-0 transition-opacity group-hover:opacity-100"
         >
           <CrossSmallIcon size={8} />
         </Button>
       )}
-    </button>
+    </div>
   );
 };
