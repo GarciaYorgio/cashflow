@@ -88,7 +88,7 @@ const PurePreviewMessage = ({
                 <PreviewAttachment
                   key={attachment.url}
                   attachment={{
-                    name: attachment.filename ?? 'archivo',
+                    name: attachment.filename || 'archivo',
                     contentType: attachment.mediaType,
                     url: attachment.url,
                   }}
@@ -119,16 +119,11 @@ const PurePreviewMessage = ({
                     <MessageContent
                       data-testid="message-content"
                       className={cn({
-                        'w-fit break-words rounded-xl px-3 py-2 text-right text-white':
+                        'w-fit break-words rounded-xl bg-black px-3 py-2 text-right text-white dark:bg-white dark:text-black ':
                           message.role === 'user',
                         'bg-transparent px-0 py-0 text-left':
                           message.role === 'assistant',
                       })}
-                      style={
-                        message.role === 'user'
-                          ? { backgroundColor: '#000000' }
-                          : undefined
-                      }
                     >
                       <Response>{sanitizeText(part.text)}</Response>
                     </MessageContent>
